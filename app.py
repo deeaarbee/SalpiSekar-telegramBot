@@ -1,5 +1,5 @@
 # import telepot
-# token = '503973362:AAFQtH-5KKljy-jIR-Eb66PfJFpkOI4GtHE'
+# token = '#'
 # TelegramBot = telepot.Bot(token)
 # print (TelegramBot.getMe())
 # #print(TelegramBot.getUpdates())
@@ -31,7 +31,7 @@ result = 0
 i = 0
 
 
-updater = Updater(token='503973362:AAFQtH-5KKljy-jIR-Eb66PfJFpkOI4GtHE')
+updater = Updater(token='#')
 dispatcher = updater.dispatcher
 
 
