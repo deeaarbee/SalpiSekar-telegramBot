@@ -1,6 +1,5 @@
-import requests
+import requests, pyowm, random
 from telegram.ext import Updater, CommandHandler
-import pyowm, random
 
 quotes = {
     '1': "The Struggle you are in today is developing you for tomorrow",
@@ -9,7 +8,6 @@ quotes = {
     '4': "Dei college poda naaye",
     '5': "Today you have Raghi Mam Class!"
 }
-
 coin = ["Heads", "Tails"]
 
 updater = Updater(token='----')
