@@ -12,7 +12,7 @@ quotes = {
 
 coin = ["Heads", "Tails"]
 
-updater = Updater(token='503973362:AAFQtH-5KKljy-jIR-Eb66PfJFpkOI4GtHE')
+updater = Updater(token='----')
 dispatcher = updater.dispatcher
 
 
@@ -21,7 +21,7 @@ def start(bot, update):
 
 
 def weather(bot, update):
-    owm = pyowm.OWM('43b1aa5e0641d33028a51ef4a9cc0721')
+    owm = pyowm.OWM('----')
     observation = owm.weather_at_place("Chennai, India")
     w = observation.get_weather()
     temperature = w.get_temperature('celsius')
@@ -34,8 +34,8 @@ def apdina(bot, update):
     txt = txt.replace('/apdina', '')
     txt = txt.lstrip()
 
-    app_id = 'f7b879e8'
-    app_key = 'bd587c9722f3fe842917b104455cfaa4'
+    app_id = '----'
+    app_key = '----'
     language = 'en'
     url = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/' + language + '/' + txt.lower()
     r = requests.get(url, headers={'app_id': app_id, 'app_key': app_key})
