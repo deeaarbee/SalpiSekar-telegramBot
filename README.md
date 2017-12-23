@@ -1,4 +1,4 @@
-<font face="comic sans"><center><h1> SalpiSekar - The Salpi telegram bot. </h1></center></font> [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
+<font face="comic sans"><center><h1> SalpiSekar - The Salpi telegram bot.[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/) </h1></center></font> 
 
 
 <hr><pre>
