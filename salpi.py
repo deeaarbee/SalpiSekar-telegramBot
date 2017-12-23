@@ -1,6 +1,6 @@
 import requests
-import urllib.request,simplejson
-import pyowm,random
+from telegram.ext import Updater, CommandHandler
+import pyowm, random
 
 quotes = {
     '1': "The Struggle you are in today is developing you for tomorrow",
@@ -10,95 +10,92 @@ quotes = {
     '5': "Today you have Raghi Mam Class!"
 }
 
+coin = ["Heads", "Tails"]
 
-class BotHandler:
+updater = Updater(token='503973362:AAFQtH-5KKljy-jIR-Eb66PfJFpkOI4GtHE')
+dispatcher = updater.dispatcher
 
-    def __init__(self, token):
-        self.token = token
-        self.api_url = "https://api.telegram.org/bot{}/".format(token)
 
-    def get_updates(self, offset=None, timeout=30):
-        method = 'getUpdates'
-        params = {'timeout': timeout, 'offset': offset}
-        resp = requests.get(self.api_url + method, params)
-        result_json = resp.json()['result']
-        return result_json
+def start(bot, update):
+    update.message.reply_text("I am Salpi-Sekar. Please make a Salpi request /help")
 
-    def send_message(self, chat_id, text):
-        params = {'chat_id': chat_id, 'text': text}
-        method = 'sendMessage'
-        resp = requests.post(self.api_url + method, params)
-        return resp
 
-    def get_last_update(self):
-        get_result = self.get_updates()
+def weather(bot, update):
+    owm = pyowm.OWM('43b1aa5e0641d33028a51ef4a9cc0721')
+    observation = owm.weather_at_place("Chennai, India")
+    w = observation.get_weather()
+    temperature = w.get_temperature('celsius')
+    update.message.reply_text('The temperature outside is ' + str(temperature['temp']) + 'C')
 
-        if len(get_result) > 0:
-            last_update = get_result[-1]
-        else:
-            last_update = get_result[len(get_result)]
 
-        return last_update
+def apdina(bot, update):
+    txt = update.message.text
+    txt = str(txt)
+    txt = txt.replace('/apdina', '')
+    txt = txt.lstrip()
 
-sekar = BotHandler("key")
+    app_id = 'f7b879e8'
+    app_key = 'bd587c9722f3fe842917b104455cfaa4'
+    language = 'en'
+    url = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/' + language + '/' + txt.lower()
+    r = requests.get(url, headers={'app_id': app_id, 'app_key': app_key})
+    if r.status_code != 200:
+        update.message.reply_text("Poda dubukku Mandaya :P  \nOlunga enter karo.")
+
+    r = r.json()
+    r1 = r['results']
+    r2 = r1[0]['lexicalEntries']
+    r3 = r2[0]['entries']
+    r4 = r3[0]['senses']
+
+    meaning = r4[0]['definitions']
+    update.message.reply_text(meaning[0])
+
+
+def coinflip(bot, update):
+    update.message.reply_text(random.choice(coin))
+
+
+def motivation(bot, update):
+    dummy = random.randint(1, 5)
+    update.message.reply_text(quotes[str(dummy)])
+
+
+def about(bot, update):
+    update.message.reply_text(
+        "Dei I am the Sappa Bot of Telegram.\nFor more info about me, ask my Programmer @spidey07")
+
+
+def help(bot, update):
+    update.message.reply_text("This is all I can do for you : " +
+                              " \n /weather - Get Weather Update" +
+                              " \n /apdina (your word) - get meanings of English words" +
+                              " \n /coinflip - Flip a coin" +
+                              " \n /motivation - Motivate you to goto College" +
+                              " \n /about - About me Salpi-Sekar"
+                              )
+
 
 def main():
-    new_offset = None
+    start_handler = CommandHandler('start', start)
+    weather_handler = CommandHandler('weather', weather)
+    apdina_handler = CommandHandler('apdina', apdina)
+    coinflip_handler = CommandHandler('coinflip', coinflip)
+    motivation_handler = CommandHandler('motivation', motivation)
+    about_handler = CommandHandler('about', about)
+    help_handler = CommandHandler('help', help)
 
+    dispatcher.add_handler(start_handler)
+    dispatcher.add_handler(weather_handler)
+    dispatcher.add_handler(apdina_handler)
+    dispatcher.add_handler(coinflip_handler)
+    dispatcher.add_handler(motivation_handler)
+    dispatcher.add_handler(about_handler)
+    dispatcher.add_handler(help_handler)
 
-
-    while True:
-
-        sekar.get_updates(new_offset)
-
-        last_update = sekar.get_last_update()
-
-        last_update_id = last_update['update_id']
-        last_chat_text = last_update['message']['text']
-        last_chat_id = last_update['message']['chat']['id']
-        last_chat_name = last_update['message']['chat']['first_name']
-
-
-        if last_chat_text in ['/start'] :
-            sekar.send_message(last_chat_id, 'I am SalpiSekar and I take care of getting you to college today somehow.. \n 1--> Weather Today \n 2-->Traffic to college \n 3-->College Motivation \n')
-
-
-        elif last_chat_text in ['2','two'] :
-            origin_address = "five furlong road, guindy,chennai"
-            destination_address = "1, 1st Cross Rd, Anna University, Kotturpuram, Chennai, Tamil Nadu 600025"
-
-            url = 'http://maps.googleapis.com/maps/api/distancematrix/json?%s' % urllib.parse.urlencode((
-                ('origins', origin_address),
-                ('destinations', destination_address),
-                ('mode', 'driving'),
-                ('language', 'en-EN'),
-                ('sensor', 'false')
-            ))
-
-            result = simplejson.load(urllib.request.urlopen(url))
-            driving_time = result['rows'][0]['elements'][0]['duration']['text']
-            sekar.send_message(last_chat_id, text="It takes " + driving_time + " to reach college today")
-            sekar.send_message(last_chat_id, 'I am SalpiSekar \n 1--> Weather \n 2-->College Ponum \n 3-->College Motivation \n')
-
-        elif last_chat_text in ['1'] :
-            owm = pyowm.OWM('key')
-            observation = owm.weather_at_place("Chennai, India")
-            w = observation.get_weather()
-            temperature = w.get_temperature('celsius')
-            sekar.send_message(last_chat_id, 'The temperature outside is '+ str(temperature['temp']) +'C')
-            sekar.send_message(last_chat_id, 'I am SalpiSekar \n 1--> Weather \n 2-->College Ponum \n 3-->College Motivation \n')
-
-
-        elif last_chat_text in ['3']:
-            dummy  = random.randint(1,5)
-            sekar.send_message(last_chat_id, quotes[str(dummy)])
-            sekar.send_message(last_chat_id, 'I am SalpiSekar \n 1--> Weather \n 2-->College Ponum \n 3-->College Motivation \n')
-
-
-
-
-        new_offset = last_update_id + 1
-
+    updater.start_polling()
+    updater.idle()
+    updater.stop()
 
 
 if __name__ == '__main__':
