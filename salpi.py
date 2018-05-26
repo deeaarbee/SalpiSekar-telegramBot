@@ -15,10 +15,12 @@ dispatcher = updater.dispatcher
 
 
 def start(bot, update):
+    print(update.message.from_user.first_name)
     update.message.reply_text("I am Salpi-Sekar. Please make a Salpi request /help")
 
 
 def weather(bot, update):
+    print(update.message.from_user.first_name)
     owm = pyowm.OWM('43b1aa5e0641d33028a51ef4a9cc0721')
     observation = owm.weather_at_place("Chennai, India")
     w = observation.get_weather()
@@ -27,6 +29,7 @@ def weather(bot, update):
 
 
 def apdina(bot, update):
+    print(update.message.from_user.first_name)
     txt = update.message.text
     txt = str(txt)
     txt = txt.replace('/apdina', '')
@@ -51,20 +54,24 @@ def apdina(bot, update):
 
 
 def coinflip(bot, update):
+    print(update.message.from_user.first_name)
     update.message.reply_text(random.choice(coin))
 
 
 def motivation(bot, update):
+    print(update.message.from_user.first_name)
     dummy = random.randint(1, 5)
     update.message.reply_text(quotes[str(dummy)])
 
 
 def about(bot, update):
+    print(update.message.from_user.first_name)
     update.message.reply_text(
         "Dei I am the Sappa Bot of Telegram.\nFor more info about me, ask my Programmer @deeaarbee")
 
 
 def help(bot, update):
+    print(update.message.from_user.first_name)
     update.message.reply_text("This is all I can do for you : " +
                               " \n /weather - Get Weather Update" +
                               " \n /apdina (your word) - get meanings of English words" +
