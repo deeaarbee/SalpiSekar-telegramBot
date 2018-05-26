@@ -61,7 +61,7 @@ def motivation(bot, update):
 
 def about(bot, update):
     update.message.reply_text(
-        "Dei I am the Sappa Bot of Telegram.\nFor more info about me, ask my Programmer @spidey07")
+        "Dei I am the Sappa Bot of Telegram.\nFor more info about me, ask my Programmer @deeaarbee")
 
 
 def help(bot, update):
